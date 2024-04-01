@@ -14,13 +14,13 @@ later goals:
 - go REVERSE with button 3
 - use 3 bit jumper setting to allow JUMP/OFFSET to middle points in the score
 
-
 */
 
 char LED_1 = 9;   // sound visusalizer 
 char LED_2 = 10;  // sound visusalizer 
-char LED_3 = 11;  // sound visusalizer 
-char LED_4 = 12;  // odd/even indicator of forward/back movement
+char LED_3 = 12;  // sound visusalizer 
+// NOT CONNECTED
+char LED_4 = 11;  // odd/even indicator of forward/back movement
 
 unsigned int C4_note = 261.63;
 unsigned int E4_note = 329.63;
@@ -29,13 +29,83 @@ unsigned int Fs4_note = 369.99;
 unsigned int G4_note = 392;
 
 unsigned int C5_note = 523.25;
-void setup() {
 
+int tempo = 120;
+const double tempoConversion = 60000.0;
+double thirtySecondNoteDuration = tempoConversion / tempo / 8;
+const int THIRTY_SECOND = 1; // 62.5ms
+const int SIXTEENTH = 2; // 125ms
+const int DOTTED_SIXTEENTH = 3; // 187.5ms
+const int EIGHTH = 4; // 250ms
+const int DOTTED_EIGHTH = 6; // 375ms
+const int QUARTER = 8; // 500ms
+const int DOTTED_QUARTER = 12; // 750ms
+const int HALF = 16; // 1000ms
+
+void playNote(unsigned int frequency, int duration, int led) {
+  tone(8, frequency);
+  lightOn(led);
+  if (duration == THIRTY_SECOND) {
+    delay(thirtySecondNoteDuration*duration);
+    OFF();
+  }
+  else {
+    delay(thirtySecondNoteDuration*duration-50);
+    OFF();
+    delay(50);
+  }
+}
+
+void playRest(int duration) {
+  OFF();
+  delay(thirtySecondNoteDuration*duration);
+}
+
+void lightOn(int led) {
+  switch (led) {
+    case 1:
+      digitalWrite(LED_1, HIGH); 
+      digitalWrite(LED_2, LOW); 
+      digitalWrite(LED_3, LOW); 
+      break;
+    case 2:
+      digitalWrite(LED_1, LOW); 
+      digitalWrite(LED_2, HIGH); 
+      digitalWrite(LED_3, LOW); 
+      break;
+    case 3:
+      digitalWrite(LED_1, LOW); 
+      digitalWrite(LED_2, LOW); 
+      digitalWrite(LED_3, HIGH); 
+      break;
+    case 4:
+      digitalWrite(LED_1, HIGH); 
+      digitalWrite(LED_2, HIGH); 
+      digitalWrite(LED_3, LOW);
+      break;
+    case 5:
+      digitalWrite(LED_1, HIGH); 
+      digitalWrite(LED_2, LOW); 
+      digitalWrite(LED_3, HIGH); 
+      break;
+    case 6:
+      digitalWrite(LED_1, LOW); 
+      digitalWrite(LED_2, HIGH); 
+      digitalWrite(LED_3, HIGH); 
+      break;
+    case 7:
+      digitalWrite(LED_1, HIGH); 
+      digitalWrite(LED_2, HIGH); 
+      digitalWrite(LED_3, HIGH); 
+      break;
+  }
+}
+
+void setup() {
   pinMode(9, OUTPUT);
   pinMode(10, OUTPUT);
   pinMode(11, OUTPUT);
   pinMode(12, OUTPUT);
-
 
   Serial.begin(9600);    // initialize serial:
 }
@@ -43,228 +113,80 @@ void setup() {
 
 void loop(){
   // call the melodies and just test as needed
-  
-  //One(); One(); One();
-  //Two(); Two(); Two();
- // Three(); Three(); Three();
-  twentySeven(); twentySeven();
-
-
-//  beat(); // eight note pulse over everything
+  // beat(); // eight note pulse over everything
+  for (int i = 1; i <= 6; i++) {
+    // selectPattern(i);
+  }
 }
 
+void selectPattern(int num) {
+  switch (num) {
+    case 1:
+      One();
+      break;
+    case 2:
+      Two();
+      break;
+    case 3:
+      Three();
+      break;
+    case 4:
+      Four();
+      break;
+    case 5:
+      Five();
+      break;
+    case 6:
+      Six();
+      break;
+  }
+}
 
 void One(){
-    tone(8,C4_note);
-      digitalWrite(LED_1, HIGH); 
-      digitalWrite(LED_2, LOW); 
-      digitalWrite(LED_3, LOW); 
-      digitalWrite(LED_4, LOW); 
-    delay(50);
-    tone(8,E4_note);
-      digitalWrite(LED_1, HIGH); 
-      digitalWrite(LED_2, HIGH); 
-      digitalWrite(LED_3, LOW); 
-      digitalWrite(LED_4, LOW); 
-    delay(200);
-    noTone(8);
-      digitalWrite(LED_1, LOW); 
-      digitalWrite(LED_2, LOW); 
-      digitalWrite(LED_3, LOW); 
-      digitalWrite(LED_4, LOW); 
-    delay(250);    
-
-    tone(8,C4_note);
-      digitalWrite(LED_1, HIGH); 
-      digitalWrite(LED_2, LOW); 
-      digitalWrite(LED_3, LOW); 
-      digitalWrite(LED_4, LOW); 
-    delay(50);
-    tone(8,E4_note);
-      digitalWrite(LED_1, HIGH); 
-      digitalWrite(LED_2, HIGH); 
-      digitalWrite(LED_3, LOW); 
-      digitalWrite(LED_4, LOW); 
-    delay(200);
-    noTone(8);
-      digitalWrite(LED_1, LOW); 
-      digitalWrite(LED_2, LOW); 
-      digitalWrite(LED_3, LOW); 
-      digitalWrite(LED_4, LOW); 
-    delay(250);    
-
-    tone(8,C4_note);
-      digitalWrite(LED_1, HIGH); 
-      digitalWrite(LED_2, LOW); 
-      digitalWrite(LED_3, LOW); 
-      digitalWrite(LED_4, LOW); 
-    delay(50);
-    tone(8,E4_note);
-      digitalWrite(LED_1, HIGH); 
-      digitalWrite(LED_2, HIGH); 
-      digitalWrite(LED_3, LOW); 
-      digitalWrite(LED_4, LOW); 
-    delay(200);
-    noTone(8);
-      digitalWrite(LED_1, LOW); 
-      digitalWrite(LED_2, LOW); 
-      digitalWrite(LED_3, LOW); 
-      digitalWrite(LED_4, LOW); 
-    delay(250);    
-
+  playNote(C4_note, THIRTY_SECOND, 1);
+  playNote(E4_note, EIGHTH, 2);
+  playRest(DOTTED_SIXTEENTH);
+  playNote(C4_note, THIRTY_SECOND, 1);
+  playNote(E4_note, EIGHTH, 2);
+  playRest(DOTTED_SIXTEENTH);
+  playNote(C4_note, THIRTY_SECOND, 1);
+  playNote(E4_note, EIGHTH, 2);
+  playRest(DOTTED_SIXTEENTH);
 }
-
 
 void Two(){
-    tone(8,C4_note);
-      digitalWrite(LED_1, HIGH); 
-      digitalWrite(LED_2, LOW); 
-      digitalWrite(LED_3, LOW); 
-      digitalWrite(LED_4, LOW); 
-    delay(50);
-    tone(8,E4_note);
-      digitalWrite(LED_1, HIGH); 
-      digitalWrite(LED_2, HIGH); 
-      digitalWrite(LED_3, LOW); 
-      digitalWrite(LED_4, LOW);     
-    delay(200);
-    tone(8,F4_note);
-      digitalWrite(LED_1, LOW); 
-      digitalWrite(LED_2, LOW); 
-      digitalWrite(LED_3, HIGH); 
-      digitalWrite(LED_4, LOW); 
-    delay(250);
-    tone(8,E4_note);
-      digitalWrite(LED_1, LOW); 
-      digitalWrite(LED_2, HIGH); 
-      digitalWrite(LED_3, LOW); 
-      digitalWrite(LED_4, LOW); 
-    delay(250);
-    noTone(8);
-      digitalWrite(LED_1, LOW); 
-      digitalWrite(LED_2, LOW); 
-      digitalWrite(LED_3, LOW); 
-      digitalWrite(LED_4, LOW); 
-    delay(250);    
+  playNote(C4_note, THIRTY_SECOND, 1);
+  playNote(E4_note, DOTTED_SIXTEENTH, 2);
+  playNote(F4_note, EIGHTH, 3);
+  playNote(E4_note, EIGHTH, 2);
+  playRest(EIGHTH);   
 }
 
-
-void Three(){ //this is just an example of what can be don
-
-    tone(8,200);
-      digitalWrite(LED_1, HIGH); 
-      digitalWrite(LED_2, LOW); 
-      digitalWrite(LED_3, LOW); 
-      digitalWrite(LED_4, LOW);     
-    delay(100);
-
-    tone(8,300);
-      digitalWrite(LED_1, LOW); 
-      digitalWrite(LED_2, HIGH); 
-      digitalWrite(LED_3, LOW); 
-      digitalWrite(LED_4, LOW);       
-    delay(100);
-
-    tone(8,859);
-      digitalWrite(LED_1, LOW); 
-      digitalWrite(LED_2, LOW); 
-      digitalWrite(LED_3, HIGH); 
-      digitalWrite(LED_4, LOW);       
-    delay(100);
-
-    tone(8,2753);
-      digitalWrite(LED_1, HIGH); 
-      digitalWrite(LED_2, HIGH); 
-      digitalWrite(LED_3, LOW); 
-      digitalWrite(LED_4, HIGH);       
-    delay(1000);
-
+void Three() {
+  playRest(EIGHTH);
+  playNote(E4_note, EIGHTH, 2);
+  playNote(F4_note, EIGHTH, 3);
+  playNote(E4_note, EIGHTH, 1);
 }
 
-/*
-void twentySeven(){  // version with no gaps between notes
-
-    tone(8,E4_note);
-      digitalWrite(LED_1, LOW); 
-      digitalWrite(LED_2, HIGH); 
-      digitalWrite(LED_3, LOW); 
-      digitalWrite(LED_4, LOW); 
-    delay(125);
-
-    tone(8,Fs4_note);
-      digitalWrite(LED_1, LOW); 
-      digitalWrite(LED_2, LOW); 
-      digitalWrite(LED_3, HIGH); 
-      digitalWrite(LED_4, LOW); 
-    delay(125);
-
-    tone(8,E4_note);
-      digitalWrite(LED_1, LOW); 
-      digitalWrite(LED_2, HIGH); 
-      digitalWrite(LED_3, LOW); 
-      digitalWrite(LED_4, LOW); 
-    delay(125);
-
-    tone(8,Fs4_note);
-      digitalWrite(LED_1, LOW); 
-      digitalWrite(LED_2, LOW); 
-      digitalWrite(LED_3, HIGH); 
-      digitalWrite(LED_4, LOW); 
-    delay(125);
-
-    tone(8,G4_note);
-      digitalWrite(LED_1, HIGH); 
-      digitalWrite(LED_2, LOW); 
-      digitalWrite(LED_3, LOW); 
-      digitalWrite(LED_4, HIGH); 
-    delay(250);
-
-    tone(8,E4_note);
-      digitalWrite(LED_1, LOW); 
-      digitalWrite(LED_2, HIGH); 
-      digitalWrite(LED_3, LOW); 
-      digitalWrite(LED_4, LOW); 
-    delay(125);  
-    tone(8,G4_note);
-      digitalWrite(LED_1, HIGH); 
-      digitalWrite(LED_2, LOW); 
-      digitalWrite(LED_3, LOW); 
-      digitalWrite(LED_4, HIGH); 
-    delay(125);
-
-        tone(8,Fs4_note);
-      digitalWrite(LED_1, LOW); 
-      digitalWrite(LED_2, LOW); 
-      digitalWrite(LED_3, HIGH); 
-      digitalWrite(LED_4, LOW); 
-    delay(125);
-
-    tone(8,E4_note);
-      digitalWrite(LED_1, LOW); 
-      digitalWrite(LED_2, HIGH); 
-      digitalWrite(LED_3, LOW); 
-      digitalWrite(LED_4, LOW); 
-    delay(125);
-
-    tone(8,Fs4_note);
-      digitalWrite(LED_1, LOW); 
-      digitalWrite(LED_2, LOW); 
-      digitalWrite(LED_3, HIGH); 
-      digitalWrite(LED_4, LOW); 
-    delay(125);
-
-    tone(8,E4_note);
-      digitalWrite(LED_1, LOW); 
-      digitalWrite(LED_2, HIGH); 
-      digitalWrite(LED_3, LOW); 
-      digitalWrite(LED_4, LOW); 
-    delay(100);
-
-    noTone(8);
-        delay(25);
-   
+void Four() {
+  playRest(EIGHTH);
+  playNote(E4_note, EIGHTH, 1);
+  playNote(F4_note, EIGHTH, 2);
+  playNote(G4_note, EIGHTH, 3);
 }
-*/
+
+void Five() {
+  playNote(E4_note, EIGHTH, 1);
+  playNote(F4_note, EIGHTH, 2);
+  playNote(G4_note, EIGHTH, 3);
+  playRest(EIGHTH);
+}
+
+void Six() {
+  playNote(C5_note, HALF, 7);
+  playNote(C5_note, HALF, 7);
+}
 
 void twentySeven(){
   
