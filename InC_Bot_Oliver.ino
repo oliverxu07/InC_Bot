@@ -31,8 +31,9 @@ unsigned int G4_note = 392;
 unsigned int C5_note = 523.25;
 
 int tempo = 120;
-const double tempoConversion = 60000.0;
-double thirtySecondNoteDuration = tempoConversion / tempo / 8;
+double thirtySecondNoteDuration = 60000.0 / tempo / 8;
+
+// rhythmic multipliers are used to calculate duration of notes and rests
 const int THIRTY_SECOND = 1; // 62.5ms
 const int SIXTEENTH = 2; // 125ms
 const int DOTTED_SIXTEENTH = 3; // 187.5ms
@@ -42,23 +43,25 @@ const int QUARTER = 8; // 500ms
 const int DOTTED_QUARTER = 12; // 750ms
 const int HALF = 16; // 1000ms
 
-void playNote(unsigned int frequency, int duration, int led) {
+void playNote(unsigned int frequency, int rhythmicMultiplier, int led) {
   tone(8, frequency);
   lightOn(led);
-  if (duration == THIRTY_SECOND) {
-    delay(thirtySecondNoteDuration*duration);
+  if (rhythmicMultiplier == THIRTY_SECOND) {
+    // grace note should be full length
+    delay(thirtySecondNoteDuration * rhythmicMultiplier);
     OFF();
   }
   else {
-    delay(thirtySecondNoteDuration*duration-50);
+    // all other rhythmic values have 50ms of silence at the end
+    delay(thirtySecondNoteDuration * rhythmicMultiplier - 50);
     OFF();
     delay(50);
   }
 }
 
-void playRest(int duration) {
+void playRest(int rhythmicMultiplier) {
   OFF();
-  delay(thirtySecondNoteDuration*duration);
+  delay(thirtySecondNoteDuration * rhythmicMultiplier);
 }
 
 void lightOn(int led) {
