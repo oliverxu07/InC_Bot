@@ -22,13 +22,20 @@ char LED_3 = 12;  // sound visusalizer
 // NOT CONNECTED
 char LED_4 = 11;  // odd/even indicator of forward/back movement
 
-unsigned int C4_note = 261.63;
-unsigned int E4_note = 329.63;
-unsigned int F4_note = 349.23;
-unsigned int Fs4_note = 369.99;
-unsigned int G4_note = 392;
-
-unsigned int C5_note = 523.25;
+const int tuningStandard = 440;
+// in equal temperament, frequency of MIDI note number m is calculated with:
+// freq = 440 * 2^((m-69)/12)
+unsigned int G3_note = tuningStandard * pow(2.0, (55 - 69) / 12.0);
+unsigned int C4_note = tuningStandard * pow(2.0, (60 - 69) / 12.0);
+unsigned int E4_note = tuningStandard * pow(2.0, (64 - 69) / 12.0);
+unsigned int F4_note = tuningStandard * pow(2.0, (65 - 69) / 12.0);
+unsigned int Fs4_note = tuningStandard * pow(2.0, (66 - 69) / 12.0);
+unsigned int G4_note = tuningStandard * pow(2.0, (67 - 69) / 12.0);
+unsigned int A4_note = tuningStandard * pow(2.0, (69 - 69) / 12.0);
+unsigned int Bb4_note = tuningStandard * pow(2.0, (70 - 69) / 12.0);
+unsigned int B4_note = tuningStandard * pow(2.0, (71 - 69) / 12.0);
+unsigned int C5_note = tuningStandard * pow(2.0, (72 - 69) / 12.0);
+unsigned int D5_note = tuningStandard * pow(2.0, (74 - 69) / 12.0);
 
 int tempo = 120;
 double thirtySecondNoteDuration = 60000.0 / tempo / 8;
@@ -42,6 +49,7 @@ const int DOTTED_EIGHTH = 6; // 375ms
 const int QUARTER = 8; // 500ms
 const int DOTTED_QUARTER = 12; // 750ms
 const int HALF = 16; // 1000ms
+const int DOTTED_HALF = 24; // 1500ms
 
 void playNote(unsigned int frequency, int rhythmicMultiplier, int led) {
   tone(8, frequency);
@@ -117,12 +125,15 @@ void setup() {
 void loop(){
   // call the melodies and just test as needed
   // beat(); // eight note pulse over everything
-  for (int i = 1; i <= 6; i++) {
-    // selectPattern(i);
+  for (int i = 1; i <= 10; i++) {
+    playPattern(i);
+    playPattern(i);
+    playPattern(i);
+    playPattern(i);
   }
 }
 
-void selectPattern(int num) {
+void playPattern(int num) {
   switch (num) {
     case 1:
       One();
@@ -141,6 +152,18 @@ void selectPattern(int num) {
       break;
     case 6:
       Six();
+      break;
+    case 7:
+      Seven();
+      break;
+    case 8:
+      Eight();
+      break;
+    case 9:
+      Nine();
+      break;
+    case 10:
+      Ten();
       break;
   }
 }
@@ -189,6 +212,41 @@ void Five() {
 void Six() {
   playNote(C5_note, HALF, 7);
   playNote(C5_note, HALF, 7);
+}
+
+void Seven() {
+  playRest(QUARTER);
+  playRest(QUARTER);
+  playRest(QUARTER);
+  playRest(EIGHTH);
+  playNote(C4_note, SIXTEENTH, 1);
+  playNote(C4_note, SIXTEENTH, 2);
+  playNote(C4_note, EIGHTH, 3);
+  playRest(EIGHTH);
+  playRest(QUARTER);
+  playRest(QUARTER);
+  playRest(QUARTER);
+  playRest(QUARTER);
+}
+
+void Eight() {
+  playNote(G4_note, DOTTED_HALF, 2);
+  playNote(F4_note, HALF, 1);
+  playNote(F4_note, HALF, 1);
+}
+
+void Nine() {
+  playNote(B4_note, SIXTEENTH, 3);
+  playNote(G4_note, SIXTEENTH, 1);
+  playRest(EIGHTH);
+  playRest(QUARTER);
+  playRest(QUARTER);
+  playRest(QUARTER);
+}
+
+void Ten() {
+  playNote(B4_note, SIXTEENTH, 3);
+  playNote(G4_note, SIXTEENTH, 1);
 }
 
 void twentySeven(){
@@ -304,7 +362,6 @@ void OFF(){
       digitalWrite(LED_1, LOW); 
       digitalWrite(LED_2, LOW); 
       digitalWrite(LED_3, LOW); 
-      digitalWrite(LED_4, LOW); 
 }
 
 void beat(){
