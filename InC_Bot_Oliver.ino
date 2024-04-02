@@ -7,7 +7,6 @@ output coding -
 - initial version has hard coded 250 ms per 1/8th note.
 - code a more general timing scheme that does the math from a larger global tempo variable
 
-
 later goals:
 - PLAY current module with button 1
 - go FORWARD with button 2
@@ -36,10 +35,10 @@ unsigned int Bb4_note = tuningStandard * pow(2.0, (70 - 69) / 12.0);
 unsigned int B4_note = tuningStandard * pow(2.0, (71 - 69) / 12.0);
 unsigned int C5_note = tuningStandard * pow(2.0, (72 - 69) / 12.0);
 unsigned int D5_note = tuningStandard * pow(2.0, (74 - 69) / 12.0);
+unsigned int G5_note = tuningStandard * pow(2.0, (79 - 69) / 12.0);
 
-int tempo = 120;
+const int tempo = 120;
 double thirtySecondNoteDuration = 60000.0 / tempo / 8;
-
 // rhythmic multipliers are used to calculate duration of notes and rests
 const int THIRTY_SECOND = 1; // 62.5ms
 const int SIXTEENTH = 2; // 125ms
@@ -50,6 +49,7 @@ const int QUARTER = 8; // 500ms
 const int DOTTED_QUARTER = 12; // 750ms
 const int HALF = 16; // 1000ms
 const int DOTTED_HALF = 24; // 1500ms
+const int WHOLE = 32; // 2000ms
 
 void playNote(unsigned int frequency, int rhythmicMultiplier, int led) {
   tone(8, frequency);
@@ -70,6 +70,18 @@ void playNote(unsigned int frequency, int rhythmicMultiplier, int led) {
 void playRest(int rhythmicMultiplier) {
   OFF();
   delay(thirtySecondNoteDuration * rhythmicMultiplier);
+}
+
+void OFF(){
+  noTone(8);
+  digitalWrite(LED_1, LOW); 
+  digitalWrite(LED_2, LOW); 
+  digitalWrite(LED_3, LOW); 
+}
+
+void beat(){
+  playNote(C5_note * 2, THIRTY_SECOND, 7);
+  playRest(DOTTED_SIXTEENTH);
 }
 
 void lightOn(int led) {
@@ -117,19 +129,18 @@ void setup() {
   pinMode(10, OUTPUT);
   pinMode(11, OUTPUT);
   pinMode(12, OUTPUT);
-
-  Serial.begin(9600);    // initialize serial:
+  Serial.begin(9600); // initialize serial
 }
 
 
 void loop(){
   // call the melodies and just test as needed
   // beat(); // eight note pulse over everything
-  for (int i = 1; i <= 10; i++) {
-    playPattern(i);
-    playPattern(i);
-    playPattern(i);
-    playPattern(i);
+  for (int i = 10; i <= 20; i++) {
+    // playPattern(i);
+    // playPattern(i);
+    // playPattern(i);
+    // playPattern(i);
   }
 }
 
@@ -163,7 +174,37 @@ void playPattern(int num) {
       Nine();
       break;
     case 10:
-      Ten();
+      ten();
+      break;
+    case 11:
+      eleven();
+      break;
+    case 12:
+      twelve();
+      break;
+    case 13:
+      thirteen();
+      break;
+    case 14:
+      fourteen();
+      break;
+    case 15:
+      fifteen();
+      break;
+    case 16:
+      sixteen();
+      break;
+    case 17:
+      seventeen();
+      break;
+    case 18:
+      eighteen();
+      break;
+    case 19:
+      nineteen();
+      break;
+    case 20:
+      twenty();
       break;
   }
 }
@@ -244,9 +285,95 @@ void Nine() {
   playRest(QUARTER);
 }
 
-void Ten() {
+void ten() {
   playNote(B4_note, SIXTEENTH, 3);
   playNote(G4_note, SIXTEENTH, 1);
+}
+
+void eleven() {
+  playNote(F4_note, SIXTEENTH, 1);
+  playNote(G4_note, SIXTEENTH, 2);
+  playNote(B4_note, SIXTEENTH, 3);
+  playNote(G4_note, SIXTEENTH, 2);
+  playNote(B4_note, SIXTEENTH, 3);
+  playNote(G4_note, SIXTEENTH, 2);
+}
+
+void twelve() {
+  playNote(F4_note, EIGHTH, 1);
+  playNote(G4_note, EIGHTH, 2);
+  playNote(B4_note, WHOLE, 4);
+  playNote(C5_note, QUARTER, 3);
+}
+
+void thirteen() {
+  playNote(B4_note, SIXTEENTH, 3);
+  playNote(G4_note, DOTTED_EIGHTH, 2);
+  playNote(G4_note, SIXTEENTH, 2);
+  playNote(F4_note, SIXTEENTH, 1);
+  playNote(G4_note, EIGHTH, 2);
+  playRest(DOTTED_EIGHTH);
+  // the written pattern has a 16th note tied to a dotted half note
+  playNote(G4_note, DOTTED_HALF, 2);
+  playRest(SIXTEENTH);
+}
+
+void fourteen() {
+  playNote(C5_note, HALF, 7);
+  playNote(B4_note, HALF, 6);
+  playNote(G4_note, HALF, 5);
+  playNote(Fs4_note, HALF, 4);
+}
+
+void fifteen() {
+  playNote(G4_note, SIXTEENTH, 1);
+  playRest(DOTTED_EIGHTH);
+  playRest(QUARTER);
+  playRest(QUARTER);
+  playRest(QUARTER);
+}
+
+void sixteen() {
+  playNote(G4_note, SIXTEENTH, 1);
+  playNote(B4_note, SIXTEENTH, 2);
+  playNote(C5_note, SIXTEENTH, 3);
+  playNote(B4_note, SIXTEENTH, 2);
+}
+
+void seventeen() {
+  playNote(B4_note, SIXTEENTH, 2);
+  playNote(C5_note, SIXTEENTH, 3);
+  playNote(B4_note, SIXTEENTH, 2);
+  playNote(C5_note, SIXTEENTH, 3);
+  playNote(B4_note, SIXTEENTH, 2);
+  playRest(SIXTEENTH);
+}
+
+void eighteen() {
+  playNote(E4_note, SIXTEENTH, 1);
+  playNote(Fs4_note, SIXTEENTH, 2);
+  playNote(E4_note, SIXTEENTH, 1);
+  playNote(Fs4_note, SIXTEENTH, 2);
+  playNote(E4_note, DOTTED_EIGHTH, 1);
+  playNote(E4_note, SIXTEENTH, 1);
+}
+
+void nineteen() {
+  playRest(DOTTED_QUARTER);
+  playNote(G5_note, DOTTED_QUARTER, 7);
+}
+
+void twenty() {
+  playNote(E4_note, SIXTEENTH, 1);
+  playNote(Fs4_note, SIXTEENTH, 2);
+  playNote(E4_note, SIXTEENTH, 1);
+  playNote(Fs4_note, SIXTEENTH, 2);
+  playNote(G3_note, DOTTED_EIGHTH, 7);
+  playNote(E4_note, SIXTEENTH, 1);
+  playNote(Fs4_note, SIXTEENTH, 2);
+  playNote(E4_note, SIXTEENTH, 1);
+  playNote(Fs4_note, SIXTEENTH, 2);
+  playNote(E4_note, SIXTEENTH, 1);
 }
 
 void twentySeven(){
@@ -357,22 +484,6 @@ void twentySeven(){
 }
 
 
-void OFF(){
-      noTone(8);
-      digitalWrite(LED_1, LOW); 
-      digitalWrite(LED_2, LOW); 
-      digitalWrite(LED_3, LOW); 
-}
 
-void beat(){
-    tone(8,C5_note*2);
-      digitalWrite(LED_1, HIGH); 
-      digitalWrite(LED_2, LOW); 
-      digitalWrite(LED_3, LOW); 
-      digitalWrite(LED_4, HIGH); 
-    delay(75);
-    OFF();
-    delay(175);
-}
 
     
