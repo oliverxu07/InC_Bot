@@ -18,9 +18,9 @@ later goals:
 
 char LED_1 = 9;   // sound visusalizer 
 char LED_2 = 10;  // sound visusalizer 
-char LED_3 = 12;  // sound visusalizer 
+char LED_3 = 11;  // sound visusalizer 
 // NOT CONNECTED
-char LED_4 = 11;  // odd/even indicator of forward/back movement
+char LED_4 = 12;  // odd/even indicator of forward/back movement
 
 const int tuningStandard = 440;
 // in equal temperament, frequency of MIDI note number m is calculated with:
@@ -145,13 +145,20 @@ void loop(){
   // call the melodies and just test as needed
   // beat(); // eight note pulse over everything
   for (int i = 1; i <= 53; i++) {
-    playPattern(i);
-    playPattern(i);
+    // playPattern(i);
+    // playPattern(i);
     // playPattern(i);
     // playPattern(i);
   }
+
+  // button logic
+  // i is now the current pattern
+  // playPattern(i)
+
+  // call playPattern(54) to stop piece
 }
 
+// button logic should not occur in this function
 void playPattern(int num) {
   switch (num) {
     case 1:
@@ -313,6 +320,9 @@ void playPattern(int num) {
     case 53:
       fiftyThree();
       break;
+    case 54:
+      // silence to end piece
+      break;
   }
 }
 
@@ -358,8 +368,8 @@ void Five() {
 }
 
 void Six() {
-  playNote(C5_note, HALF, 7);
-  playNote(C5_note, HALF, 7);
+  playNote(C5_note, WHOLE, 7);
+  playNote(C5_note, WHOLE, 7);
 }
 
 void Seven() {
@@ -378,9 +388,9 @@ void Seven() {
 }
 
 void Eight() {
-  playNote(G4_note, DOTTED_HALF, 2);
-  playNote(F4_note, HALF, 1);
-  playNote(F4_note, HALF, 1);
+  playNote(G4_note, DOTTED_WHOLE, 2);
+  playNote(F4_note, WHOLE, 1);
+  playNote(F4_note, WHOLE, 1);
 }
 
 void Nine() {
@@ -426,10 +436,10 @@ void thirteen() {
 }
 
 void fourteen() {
-  playNote(C5_note, HALF, 7);
-  playNote(B4_note, HALF, 6);
-  playNote(G4_note, HALF, 5);
-  playNote(Fs4_note, HALF, 4);
+  playNote(C5_note, WHOLE, 7);
+  playNote(B4_note, WHOLE, 6);
+  playNote(G4_note, WHOLE, 5);
+  playNote(Fs4_note, WHOLE, 4);
 }
 
 void fifteen() {
@@ -689,10 +699,10 @@ void fortyOne() {
 }
 
 void fortyTwo() {
-  playNote(C5_note, HALF, 3);
-  playNote(B4_note, HALF, 2);
-  playNote(A4_note, HALF, 1);
-  playNote(C5_note, HALF, 3);
+  playNote(C5_note, WHOLE, 3);
+  playNote(B4_note, WHOLE, 2);
+  playNote(A4_note, WHOLE, 1);
+  playNote(C5_note, WHOLE, 3);
 }
 
 void fortyThree() {
@@ -744,9 +754,9 @@ void fortySeven() {
 }
 
 void fortyEight() {
-  playNote(G4_note, DOTTED_HALF, 5);
-  playNote(G4_note, HALF, 5);
-  playNote(F4_note, HALF, 4);
+  playNote(G4_note, DOTTED_WHOLE, 5);
+  playNote(G4_note, WHOLE, 5);
+  playNote(F4_note, WHOLE, 4);
   playNote(F4_note, QUARTER, 4);
 }
 
