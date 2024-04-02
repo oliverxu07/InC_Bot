@@ -1,19 +1,19 @@
-/* IN C BOT 
-20240401 - Oliver Xu
+/* 
+IN C BOT 
+04012024 - Oliver Xu
 
 output coding - 
-- all 53 IN C modules
-- direct LED behavior for each to visualize the melodic modules
+- all 53 IN C patterns
+- direct LED behavior for each to visualize the melodic patterns
 
-- initial version has hard coded 250 ms per 1/8th note.
-- code a more general timing scheme that does the math from a larger global tempo variable
+- tuning is configurable with tuningStandard global constant
+- tempo is configurable with tempo global constant
 
 later goals:
 - PLAY current module with button 1
 - go FORWARD with button 2
 - go REVERSE with button 3
 - use 3 bit jumper setting to allow JUMP/OFFSET to middle points in the score
-
 */
 
 char LED_1 = 9;   // sound visusalizer 
