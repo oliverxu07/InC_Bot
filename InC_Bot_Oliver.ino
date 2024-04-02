@@ -26,23 +26,23 @@ const int tuningStandard = 440;
 // in equal temperament, frequency of MIDI note number m is calculated with:
 // freq = 440 * 2^((m-69)/12)
 // https://homes.luddy.indiana.edu/donbyrd/Teach/MusicalPitchesTable.htm
-unsigned int G3_note = tuningStandard * pow(2.0, (55 - 69) / 12.0);
-unsigned int C4_note = tuningStandard * pow(2.0, (60 - 69) / 12.0);
-unsigned int E4_note = tuningStandard * pow(2.0, (64 - 69) / 12.0);
-unsigned int F4_note = tuningStandard * pow(2.0, (65 - 69) / 12.0);
-unsigned int Fs4_note = tuningStandard * pow(2.0, (66 - 69) / 12.0);
-unsigned int G4_note = tuningStandard * pow(2.0, (67 - 69) / 12.0);
-unsigned int A4_note = tuningStandard * pow(2.0, (69 - 69) / 12.0);
-unsigned int Bb4_note = tuningStandard * pow(2.0, (70 - 69) / 12.0);
-unsigned int B4_note = tuningStandard * pow(2.0, (71 - 69) / 12.0);
-unsigned int C5_note = tuningStandard * pow(2.0, (72 - 69) / 12.0);
-unsigned int D5_note = tuningStandard * pow(2.0, (74 - 69) / 12.0);
-unsigned int E5_note = tuningStandard * pow(2.0, (76 - 69) / 12.0);
-unsigned int F5_note = tuningStandard * pow(2.0, (77 - 69) / 12.0);
-unsigned int Fs5_note = tuningStandard * pow(2.0, (78 - 69) / 12.0);
-unsigned int G5_note = tuningStandard * pow(2.0, (79 - 69) / 12.0);
-unsigned int A5_note = tuningStandard * pow(2.0, (81 - 69) / 12.0);
-unsigned int B5_note = tuningStandard * pow(2.0, (83 - 69) / 12.0);
+unsigned int G3_note = round(tuningStandard * pow(2.0, (55 - 69) / 12.0));
+unsigned int C4_note = round(tuningStandard * pow(2.0, (60 - 69) / 12.0));
+unsigned int E4_note = round(tuningStandard * pow(2.0, (64 - 69) / 12.0));
+unsigned int F4_note = round(tuningStandard * pow(2.0, (65 - 69) / 12.0));
+unsigned int Fs4_note = round(tuningStandard * pow(2.0, (66 - 69) / 12.0));
+unsigned int G4_note = round(tuningStandard * pow(2.0, (67 - 69) / 12.0));
+unsigned int A4_note = round(tuningStandard * pow(2.0, (69 - 69) / 12.0));
+unsigned int Bb4_note = round(tuningStandard * pow(2.0, (70 - 69) / 12.0));
+unsigned int B4_note = round(tuningStandard * pow(2.0, (71 - 69) / 12.0));
+unsigned int C5_note = round(tuningStandard * pow(2.0, (72 - 69) / 12.0));
+unsigned int D5_note = round(tuningStandard * pow(2.0, (74 - 69) / 12.0));
+unsigned int E5_note = round(tuningStandard * pow(2.0, (76 - 69) / 12.0));
+unsigned int F5_note = round(tuningStandard * pow(2.0, (77 - 69) / 12.0));
+unsigned int Fs5_note = round(tuningStandard * pow(2.0, (78 - 69) / 12.0));
+unsigned int G5_note = round(tuningStandard * pow(2.0, (79 - 69) / 12.0));
+unsigned int A5_note = round(tuningStandard * pow(2.0, (81 - 69) / 12.0));
+unsigned int B5_note = round(tuningStandard * pow(2.0, (83 - 69) / 12.0));
 
 const int tempo = 120;
 double thirtySecondNoteDuration = 60000.0 / tempo / 8;
@@ -145,8 +145,8 @@ void loop(){
   // call the melodies and just test as needed
   // beat(); // eight note pulse over everything
   for (int i = 1; i <= 53; i++) {
-    // playPattern(i);
-    // playPattern(i);
+    playPattern(i);
+    playPattern(i);
     // playPattern(i);
     // playPattern(i);
   }
