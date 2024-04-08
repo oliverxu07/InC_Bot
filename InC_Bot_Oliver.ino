@@ -103,6 +103,9 @@ const int DOTTED_HALF = 24; // 1500ms
 const int WHOLE = 32; // 2000ms
 const int DOTTED_WHOLE = 48; // 3000ms
 
+const int TWO_SIXTEENTH_REPETITIONS = 2;
+const int THREE_SIXTEENTH_REPETITIONS = 3;
+
 void playNote(unsigned int frequency, int rhythmicMultiplier, int led) {
   tone(8, frequency);
   lightOn(led);
@@ -298,7 +301,9 @@ void playPattern(int num) {
       Nine();
       break;
     case 10:
-      ten();
+      for (int i = 0; i < THREE_SIXTEENTH_REPETITIONS; i++) {
+        ten();
+      }
       break;
     case 11:
       eleven();
@@ -370,7 +375,9 @@ void playPattern(int num) {
       thirtyThree();
       break;
     case 34:
-      thirtyFour();
+      for (int i = 0; i < THREE_SIXTEENTH_REPETITIONS; i++) {
+        thirtyFour();
+      }
       break;
     case 35:
       thirtyFive();
@@ -379,19 +386,27 @@ void playPattern(int num) {
       thirtySix();
       break;
     case 37:
-      thirtySeven();
+      for (int i = 0; i < THREE_SIXTEENTH_REPETITIONS; i++) {
+        thirtySeven();
+      }
       break;
     case 38:
-      thirtyEight();
+      for (int i = 0; i < TWO_SIXTEENTH_REPETITIONS; i++) {
+        thirtyEight();
+      }
       break;
     case 39:
       thirtyNine();
       break;
     case 40:
-      forty();
+      for (int i = 0; i < THREE_SIXTEENTH_REPETITIONS; i++) {
+        forty();
+      }
       break;
     case 41:
-      fortyOne();
+      for (int i = 0; i < THREE_SIXTEENTH_REPETITIONS; i++) {
+        fortyOne();
+      }
       break;
     case 42:
       fortyTwo();
@@ -418,16 +433,24 @@ void playPattern(int num) {
       fortyNine();
       break;
     case 50:
-      fifty();
+      for (int i = 0; i < THREE_SIXTEENTH_REPETITIONS; i++) {
+        fifty();
+      }
       break;
     case 51:
-      fiftyOne();
+      for (int i = 0; i < TWO_SIXTEENTH_REPETITIONS; i++) {
+        fiftyOne();
+      }
       break;
     case 52:
-      fiftyTwo();
+      for (int i = 0; i < THREE_SIXTEENTH_REPETITIONS; i++) {
+        fiftyTwo();
+      }
       break;
     case 53:
-      fiftyThree();
+      for (int i = 0; i < THREE_SIXTEENTH_REPETITIONS; i++) {
+        fiftyThree();
+      }
       break;
     case 54:
       // silence to end piece
