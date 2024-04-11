@@ -49,6 +49,7 @@ char LED_4 = 12;  // odd/even indicator of forward/back movement
 char B1_fwd = 4;  // button - forward
 char B2_autopilot = 2;  // button - autopilot
 char B3_play = 3; // button - play
+// TODO: convert B3_play to B3_mute
 
 char jump1 = 5;   // dip switch for offset, reh number jump MSB
 char jump2 = 6;   // dip switch for offset, reh number jump
@@ -102,7 +103,7 @@ const int DOTTED_WHOLE = 48; // 3000ms
 const int TWO_SIXTEENTH_REPETITIONS = 2;
 const int THREE_SIXTEENTH_REPETITIONS = 3;
 
-const double perfDuration = 10.0; // minutes
+const double perfDuration = 25.0; // minutes
 
 unsigned long lastInterruptTime = 0;
 
@@ -128,6 +129,7 @@ int calculateNumReps(int pattern) {
 }
 
 void playNote(unsigned int frequency, int rhythmicMultiplier, int led) {
+  // check volatile mute flag to decide whether to play tone and turn on LEDs
   tone(8, frequency);
   lightOn(led);
   if (rhythmicMultiplier == THIRTY_SECOND) {
@@ -485,13 +487,9 @@ void playPattern(int num) {
       }
       break;
     case 53:
-      for (int i = 0; i < THREE_SIXTEENTH_REPETITIONS; i++) {
+      while (1) {
         fiftyThree();
       }
-      break;
-    case 54:
-      // silence to end piece
-      break;
   }
 }
 
