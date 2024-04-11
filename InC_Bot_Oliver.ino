@@ -102,7 +102,7 @@ const int DOTTED_WHOLE = 48; // 3000ms
 const int TWO_SIXTEENTH_REPETITIONS = 2;
 const int THREE_SIXTEENTH_REPETITIONS = 3;
 
-const double perfDuration = 10.0; // minutes
+const double perfDuration = 25.0; // minutes
 
 unsigned long lastInterruptTime = 0;
 
