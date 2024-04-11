@@ -5,19 +5,19 @@ NEW FEATURES
    * TWO modes of operation
    * 1:  BEAT jumpers at 111 - 
    * 2:  NORMAL PLAY jumpers not at 111
-- DIP switch jumps to sections according to red boxes in score
-- PLAY (middle button)  - plays music of current section
-- At Power Up - with DIP to 0000, init to Section 1, with all LED's on
-- Press of NEXT will increment section by 1
-- Another increment will only be allowed if a current section is played at least once 
-- ALL LEDS ON - anytime we are in standing by in Section 1
-- LED even/odd indicator:  LED 4 is ON when current section is EVEN and off when ODD
-- ending condition to never increment past Section 53 (the last section )
+- DIP switch jumps to patterns according to red boxes in score
+- PLAY (middle button)  - plays music of current pattern
+- At Power Up - with DIP to 0000, init to pattern 1, with all LED's on
+- Press of NEXT will increment pattern by 1
+- Another increment will only be allowed if a current pattern is played at least once 
+- ALL LEDS ON - anytime we are in standing by in pattern 1
+- LED even/odd indicator:  LED 4 is ON when current pattern is EVEN and off when ODD
+- ending condition to never increment past pattern 53 (the last pattern )
 
 USER INSTRUCTIONS
 - place all jumpers down to 0000
 - plug in usb cable
-- all lights will turn on - we are waiting in SECTION 1
+- all lights will turn on - we are waiting in pattern 1
 - press middle button to play
 - hit right button to go to next
 - you can only go to the next when at least 1 cycle of the current seciont has been played
@@ -41,30 +41,25 @@ output coding -
 
 */
 
-char LED_1 = 9;   // sound visusalizer 
-char LED_2 = 10;  // sound visusalizer 
-char LED_3 = 11;  // sound visusalizer 
-// NOT CONNECTED
+char LED_1 = 9;   // sound visualizer 
+char LED_2 = 10;  // sound visualizer 
+char LED_3 = 11;  // sound visualizer 
 char LED_4 = 12;  // odd/even indicator of forward/back movement
 
-char B1_fwd = 4;  //button - forward
-char B2_rev = 2;  //button - reverse
-char B3_play = 3; //button - play
+char B1_fwd = 4;  // button - forward
+char B2_autopilot = 2;  // button - autopilot
+char B3_play = 3; // button - play
 
-char jump1 = 5;   //dip switch for offset, reh number jump MSB
-char jump2 = 6;   //dip switch for offset, reh number jump
-char jump3 = 7;   //dip switch for offset, reh number jump
+char jump1 = 5;   // dip switch for offset, reh number jump MSB
+char jump2 = 6;   // dip switch for offset, reh number jump
+char jump3 = 7;   // dip switch for offset, reh number jump
 
-int SECTION = 1;    /* MAIN SECTION NUMBER */
-int SEC_OFFSET = 1; /* offset to base starting number to jump to reh numbres */
+int pattern = 1;    // current pattern index
+int jumpOffset = 1; // offset to jump to rehearsal numbers
 
-//OFFSET CALCULATION FLAGS
-int storeOFFSET = 1;
-boolean holdOFFSET = 0;
-
-//SECTION CALCULATION FLAGS
-boolean GO_forward = 1; //init to allow going forward in increment SECTION
-boolean hasPLAYED = 1;   //has a seciton played at least once? init to 1
+int storeOffset = 1; // used to store offset after jumping
+boolean holdOffset = 0; // flag to determine if offset should be used
+boolean hasPLAYED = 1; // has a section played at least once? init to 1
 
 const int tuningStandard = 440;
 // in equal temperament, frequency of MIDI note number m is calculated with:
@@ -182,13 +177,13 @@ void lightOn(int led) {
 void setup() {
 
   
-  pinMode(B1_fwd, INPUT);  //button to advance forward to next section
-  pinMode(B2_rev, INPUT); // button to go back to previous sections
-  pinMode(B3_play, INPUT);  //button PLAY current setion
+  pinMode(B1_fwd, INPUT);  // button to advance forward to next pattern
+  pinMode(B2_autopilot, INPUT); // button to enable and disable autopilot
+  pinMode(B3_play, INPUT);  // button to play current pattern
 
-  pinMode(jump1, INPUT_PULLUP);  //jumper #1 for section offset to jump to rehearsal number
-  pinMode(jump2, INPUT_PULLUP);  //jumper #2 for section offset to jump to rehearsal number
-  pinMode(jump3, INPUT_PULLUP);  //jumper #3 for section offset to jump to rehearsal number
+  pinMode(jump1, INPUT_PULLUP);  // jumper #1 for pattern offset to jump to rehearsal number
+  pinMode(jump2, INPUT_PULLUP);  // jumper #2 for pattern offset to jump to rehearsal number
+  pinMode(jump3, INPUT_PULLUP);  // jumper #3 for pattern offset to jump to rehearsal number
 
   pinMode(9, OUTPUT);
   pinMode(10, OUTPUT);
@@ -200,26 +195,26 @@ void setup() {
 
 void loop(){
   int NEXT = digitalRead(B1_fwd);
-  int PREV = digitalRead(B2_rev);
+  int AUTOPILOT = digitalRead(B2_autopilot);
   int PLAY = digitalRead(B3_play);
   Serial.print("                      ");  
-  Serial.print(PREV);   Serial.print(" "); Serial.print(PLAY); Serial.print(" "); Serial.println(NEXT);  
+  Serial.print(AUTOPILOT);   Serial.print(" "); Serial.print(PLAY); Serial.print(" "); Serial.println(NEXT);  
 
   boolean J1 = digitalRead(jump1);
   boolean J2 = digitalRead(jump2);
   boolean J3 = digitalRead(jump3);
   
   // Parse jumper values to determine offset  - LOW ACTIVE BITS!
-  if (J1==1 && J2==1 && J3==1)        {  SEC_OFFSET = 1; }
-  else if (J1==0 && J2==1 && J3==1)   {  SEC_OFFSET = 9; }
-  else if (J1==1 && J2==0 && J3==1)   {  SEC_OFFSET = 18; }
-  else if (J1==1 && J2==1 && J3==0)   {  SEC_OFFSET = 29; }
-  else if (J1==0 && J2==0 && J3==1)   {  SEC_OFFSET = 36; }
-  else if (J1==0 && J2==1 && J3==0)   {  SEC_OFFSET = 43; }
-  else if (J1==1 && J2==0 && J3==0)   {  SEC_OFFSET = 49; }
-  else if (J1==0 && J2==0 && J3==0)   {  SEC_OFFSET = 100; }  // all 1 is BEAT FUNCTION
-  else                                {  SEC_OFFSET = 0;};
-  Serial.print("OFFSET= ");    Serial.println(SEC_OFFSET);
+  if (J1==1 && J2==1 && J3==1)        {  jumpOffset = 1; }
+  else if (J1==0 && J2==1 && J3==1)   {  jumpOffset = 9; }
+  else if (J1==1 && J2==0 && J3==1)   {  jumpOffset = 18; }
+  else if (J1==1 && J2==1 && J3==0)   {  jumpOffset = 29; }
+  else if (J1==0 && J2==0 && J3==1)   {  jumpOffset = 36; }
+  else if (J1==0 && J2==1 && J3==0)   {  jumpOffset = 43; }
+  else if (J1==1 && J2==0 && J3==0)   {  jumpOffset = 49; }
+  else if (J1==0 && J2==0 && J3==0)   {  jumpOffset = 100; }  // all 1 is BEAT FUNCTION
+  else                                {  jumpOffset = 0;};
+  Serial.print("OFFSET= ");    Serial.println(jumpOffset);
 
   /*
    * TWO modes of operation
@@ -227,48 +222,59 @@ void loop(){
    * 2:  NORMAL PLAY jumpers not at 111
    */
 
-  if (SEC_OFFSET != 100) { // normal playing operation - all jumpers are
-    if(SEC_OFFSET != storeOFFSET){  holdOFFSET = 0; }    //dont hold offset - bc OFFSET has CHANGED!
-  
-    //increment section if FWD is pressed
-    if(NEXT == 0){                  //NEXT not pressed
-        if(holdOFFSET == 0){        //allow new offset to take effect to update section
-          SECTION = SEC_OFFSET;
-          storeOFFSET = SEC_OFFSET; //store OFFSET to compare later to see if a change has happened in OFFSET
-        }
-    }
-    else{                           //! yes NEXT is Pressed !
-      if(hasPLAYED == 1 && SECTION <53){           //only increment if we are allowed to GO Forward
-        
-        SECTION = SECTION + 1 ;
-        hasPLAYED = 0;              // new section so it has NOT played
-        holdOFFSET = 1;             //we've advanced in SECTION - lets stop offset from overriding SECTION
+  if (jumpOffset == 100) {
+    // play beat
+    beat();
+  }
+  else { 
+    // normal playing operation
+    if (jumpOffset != storeOffset) {
+      // don't hold offset - bc OFFSET has CHANGED!
+      holdOffset = 0; 
+    }    
+    // increment pattern if NEXT is pressed
+    if (NEXT == 1){                  
+      //! yes NEXT is Pressed !
+      if (hasPLAYED == 1 && pattern < 53) {           
+        // only increment if we are allowed to GO Forward
+        pattern = pattern + 1;
+        hasPLAYED = 0; // new pattern so it has NOT played
+        holdOffset = 1; // we've advanced in pattern - let's stop offset from overriding pattern
         // EVEN/ODD LED activity - ON if EVEN
-        if (SECTION % 2 == 0) { digitalWrite(LED_4, HIGH); }  else{ digitalWrite(LED_4, LOW); }
+        if (pattern % 2 == 0) {
+          digitalWrite(LED_4, HIGH); 
+        }  
+        else {
+          digitalWrite(LED_4, LOW); 
+        }
       }
     }
-    Serial.print("         "); Serial.print("SECTION= ");    Serial.println(SECTION);
-  
+    else {                           
+      // NEXT not pressed
+      if (holdOffset == 0) {        
+        // allow new offset to take effect to update pattern
+        pattern = jumpOffset;
+        storeOffset = jumpOffset; // store OFFSET to compare later to see if a change has happened in OFFSET
+      }  
+    }
+    Serial.print("         "); Serial.print("pattern= ");    Serial.println(pattern);
     
     // --- PLAY! ---
-    if(PLAY == 1){
-      playPattern(SECTION);         // play the music of the current SECTION
-      hasPLAYED = 1;                //ok we've played at least once
+    if (PLAY == 1) {
+      playPattern(pattern);         // play the music of the current pattern
+      hasPLAYED = 1;                // ok we've played at least once
     }
-    else{
-      if (SEC_OFFSET == 1 && SECTION == 1) { //indicator for SECTION 1 - all lights ON!
+    else {
+      if (pattern == 1) { 
+        //indicator for pattern 1 - all lights ON!
         digitalWrite(LED_1, HIGH); digitalWrite(LED_2, HIGH); digitalWrite(LED_3, HIGH); digitalWrite(LED_4, HIGH);
       }
-      else {                         //no section 1, so behave as usual - turn everything off when not playing
+      else {                         
+        // not pattern 1, so behave as usual - turn everything off when not playing
         OFF();
       }
     }
   }
-  else {
-    beat();  
-  }
-  // ? with jumper 111 ?
-  // call playPattern(54) to stop piece
 }
 
 void playPattern(int num) {
