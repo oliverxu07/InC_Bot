@@ -84,7 +84,7 @@ unsigned int G5_note = round(tuningStandard * pow(2.0, (79 - 69) / 12.0));
 unsigned int A5_note = round(tuningStandard * pow(2.0, (81 - 69) / 12.0));
 unsigned int B5_note = round(tuningStandard * pow(2.0, (83 - 69) / 12.0));
 
-const int tempo = 120;
+const double tempo = 120;
 double thirtySecondNoteDuration = 60000.0 / tempo / 8;
 // rhythmic multipliers are used to calculate duration of notes and rests
 const int THIRTY_SECOND = 1; // 62.5ms
@@ -102,7 +102,7 @@ const int DOTTED_WHOLE = 48; // 3000ms
 const int TWO_SIXTEENTH_REPETITIONS = 2;
 const int THREE_SIXTEENTH_REPETITIONS = 3;
 
-const double perfDuration = 25.0; // minutes
+const double perfDuration = 10.0; // minutes
 
 unsigned long lastInterruptTime = 0;
 
@@ -144,7 +144,6 @@ void playNote(unsigned int frequency, int rhythmicMultiplier, int led) {
 }
 
 void playRest(int rhythmicMultiplier) {
-  OFF();
   delay(thirtySecondNoteDuration * rhythmicMultiplier);
 }
 
@@ -257,66 +256,53 @@ void loop(){
   else if (J1==0 && J2==0 && J3==1)   {  jumpOffset = 36; }
   else if (J1==0 && J2==1 && J3==0)   {  jumpOffset = 43; }
   else if (J1==1 && J2==0 && J3==0)   {  jumpOffset = 49; }
-  else if (J1==0 && J2==0 && J3==0)   {  jumpOffset = 100; }  // all 1 is BEAT FUNCTION
   else                                {  jumpOffset = 0;};
   // Serial.print("OFFSET= ");    Serial.println(jumpOffset);
 
-  /*
-   * TWO modes of operation
-   * 1:  BEAT jumpers at 111 - 
-   * 2:  NORMAL PLAY jumpers not at 111
-   */
-
-  if (jumpOffset == 100) {
-    // play beat
-    beat();
+  if (autopilotActive) {
+    int numReps = calculateNumReps(pattern);
+    for (int i = 0; i < numReps; i++) {
+      playPattern(pattern);
+    }
+    incrementPattern();
   }
-  else { 
-    if (autopilotActive) {
-      int numReps = calculateNumReps(pattern);
-      for (int i = 0; i < numReps; i++) {
-        playPattern(pattern);
+  else {
+    // normal playing operation
+    if (jumpOffset != storeOffset) {
+      // don't hold offset - bc OFFSET has CHANGED!
+      holdOffset = 0; 
+    }    
+    // increment pattern if NEXT is pressed
+    if (NEXT == 1) {                  
+      //! yes NEXT is Pressed !
+      if (hasPlayed == 1 && pattern < 53) {           
+        // only increment if we are allowed to GO Forward
+        incrementPattern();
       }
-      incrementPattern();
+    }
+    else {                           
+      // NEXT not pressed
+      if (holdOffset == 0) {        
+        // allow new offset to take effect to update pattern
+        pattern = jumpOffset;
+        storeOffset = jumpOffset; // store OFFSET to compare later to see if a change has happened in OFFSET
+      }  
+    }
+    // Serial.print("         "); Serial.print("pattern= ");    Serial.println(pattern);
+    
+    // --- PLAY! ---
+    if (PLAY == 1) {
+      playPattern(pattern);         // play the music of the current pattern
+      hasPlayed = 1;                // ok we've played at least once
     }
     else {
-      // normal playing operation
-      if (jumpOffset != storeOffset) {
-        // don't hold offset - bc OFFSET has CHANGED!
-        holdOffset = 0; 
-      }    
-      // increment pattern if NEXT is pressed
-      if (NEXT == 1) {                  
-        //! yes NEXT is Pressed !
-        if (hasPlayed == 1 && pattern < 53) {           
-          // only increment if we are allowed to GO Forward
-          incrementPattern();
-        }
+      if (pattern == 1) { 
+        //indicator for pattern 1 - all lights ON!
+        digitalWrite(LED_1, HIGH); digitalWrite(LED_2, HIGH); digitalWrite(LED_3, HIGH); digitalWrite(LED_4, HIGH);
       }
-      else {                           
-        // NEXT not pressed
-        if (holdOffset == 0) {        
-          // allow new offset to take effect to update pattern
-          pattern = jumpOffset;
-          storeOffset = jumpOffset; // store OFFSET to compare later to see if a change has happened in OFFSET
-        }  
-      }
-      // Serial.print("         "); Serial.print("pattern= ");    Serial.println(pattern);
-      
-      // --- PLAY! ---
-      if (PLAY == 1) {
-        playPattern(pattern);         // play the music of the current pattern
-        hasPlayed = 1;                // ok we've played at least once
-      }
-      else {
-        if (pattern == 1) { 
-          //indicator for pattern 1 - all lights ON!
-          digitalWrite(LED_1, HIGH); digitalWrite(LED_2, HIGH); digitalWrite(LED_3, HIGH); digitalWrite(LED_4, HIGH);
-        }
-        else {                         
-          // not pattern 1, so behave as usual - turn everything off when not playing
-          OFF();
-        }
+      else {                         
+        // not pattern 1, so behave as usual - turn everything off when not playing
+        OFF();
       }
     }
   }
