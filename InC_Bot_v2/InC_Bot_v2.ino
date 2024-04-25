@@ -120,7 +120,7 @@ const int DOTTED_WHOLE = 48; // 3000ms
 const int TWO_SIXTEENTH_REPETITIONS = 2;
 const int THREE_SIXTEENTH_REPETITIONS = 3;
 
-const double perfDuration = 10.0; // minutes
+const double perfDuration = 25.0; // minutes
 double avgDurationPerPattern = perfDuration * 60 * 1000 / 53; // ms
 
 unsigned long lastAutopilotInterruptTime = 0;
