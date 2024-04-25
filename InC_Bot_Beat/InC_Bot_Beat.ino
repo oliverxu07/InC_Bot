@@ -1,4 +1,12 @@
 /* 
+
+IN C BOT - isolate beat function
+04112024 - Oliver Xu
+
+autopilot button is used to start and stop the 8th note pulse
+
+----------------------
+
 IN C BOT - button control
 04082024 - Levy Lorenzo
 NEW FEATURES
@@ -29,6 +37,7 @@ re-set the jumper position
 note: "REVERSE button" has no function  can find a use later...
 
 ----------------------
+
 IN C BOT 
 04012024 - Oliver Xu
 
@@ -87,28 +96,9 @@ const int DOTTED_HALF = 24; // 1500ms
 const int WHOLE = 32; // 2000ms
 const int DOTTED_WHOLE = 48; // 3000ms
 
-const int TWO_SIXTEENTH_REPETITIONS = 2;
-const int THREE_SIXTEENTH_REPETITIONS = 3;
-
-const double perfDuration = 25.0; // minutes
-
 unsigned long lastInterruptTime = 0;
 unsigned long startMillis = 0;
 unsigned long currentMillis = 0;
-
-int numThirtySecondNotesInPattern[53] = { 
-  24, 16, 16, 16, 16, 64, 
-  72, 112, 32, 12, 
-  12, 48, 48, 128, 32, 
-  8, 12, 16, 24, 24, 24, 
-  104, 96, 84, 
-  84, 76, 24, 16, 
-  72, 48, 12, 48, 8, 12, 
-  256, 
-  12, 12, 12, 12, 12, 12, 128, 
-  24, 24, 24, 40, 8, 
-  96, 12, 12, 12, 12, 12
-};
 
 void playNote(unsigned int frequency, int rhythmicMultiplier, int led) {
   tone(8, frequency);
