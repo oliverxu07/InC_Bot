@@ -93,8 +93,8 @@ unsigned int G5_note = round(tuningStandard * pow(2.0, (79 - 69) / 12.0));
 unsigned int A5_note = round(tuningStandard * pow(2.0, (81 - 69) / 12.0));
 unsigned int B5_note = round(tuningStandard * pow(2.0, (83 - 69) / 12.0));
 
-const double tempo = 120;
-double thirtySecondNoteDuration = 60000.0 / tempo / 8;
+const double tempo = 120; // bpm
+double thirtySecondNoteDuration = 60000.0 / tempo / 8; // ms
 // rhythmic multipliers are used to calculate duration of notes and rests
 const int THIRTY_SECOND = 1; // 62.5ms
 const int SIXTEENTH = 2; // 125ms
@@ -112,6 +112,7 @@ const int TWO_SIXTEENTH_REPETITIONS = 2;
 const int THREE_SIXTEENTH_REPETITIONS = 3;
 
 const double perfDuration = 25.0; // minutes
+double avgDurationPerPattern = perfDuration * 60 * 1000 / 53; // ms
 
 unsigned long lastInterruptTime = 0;
 
@@ -130,14 +131,12 @@ int numThirtySecondNotesInPattern[53] = {
 };
 
 int calculateNumReps(int pattern) {
-  double avgDuration = perfDuration * 60 * 1000 / 53;
   int patternDuration = numThirtySecondNotesInPattern[pattern-1] * thirtySecondNoteDuration;
-  int numReps = round(avgDuration / patternDuration);
+  int numReps = round(avgDurationPerPattern / patternDuration);
   return numReps < 1 ? 1 : numReps;
 }
 
 void playNote(unsigned int frequency, int rhythmicMultiplier, int led) {
-  // check volatile mute flag to decide whether to play tone and turn on LEDs
   tone(8, frequency);
   lightOn(led);
   if (rhythmicMultiplier == THIRTY_SECOND) {
