@@ -1,4 +1,13 @@
 /* 
+
+IN C BOT - autopilot feature
+04102024 - Oliver Xu
+AUTOPILOT button (left) triggers continuous playing of patterns, with repetitions calculated according to a specified performance duration
+  - to stop, press button again (do not hold) and playing will end after the current pattern cycle finishes
+  - pattern will automatically increment after current cycle finishes
+
+----------------------
+
 IN C BOT - button control
 04082024 - Levy Lorenzo
 NEW FEATURES
@@ -49,7 +58,6 @@ char LED_4 = 12;  // odd/even indicator of forward/back movement
 char B1_fwd = 4;  // button - forward
 char B2_autopilot = 2;  // button - autopilot
 char B3_play = 3; // button - play
-// TODO: convert B3_play to B3_mute
 
 char jump1 = 5;   // dip switch for offset, reh number jump MSB
 char jump2 = 6;   // dip switch for offset, reh number jump

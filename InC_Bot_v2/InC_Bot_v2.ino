@@ -1,12 +1,17 @@
 /* 
 
-IN C BOT - autopilot and mute features
+IN C BOT - mute feature
 04122024 - Oliver Xu
 
-- AUTOPILOT button (left) triggers continuous playing of patterns, with repetitions calculated according to a specified performance duration
+MUTE button (middle) mutes tones and LEDs but bot continues moving through patterns
+
+----------------------
+
+IN C BOT - autopilot feature
+04102024 - Oliver Xu
+AUTOPILOT button (left) triggers continuous playing of patterns, with repetitions calculated according to a specified performance duration
   - to stop, press button again (do not hold) and playing will end after the current pattern cycle finishes
   - pattern will automatically increment after current cycle finishes
-- MUTE button (middle) mutes tones and LEDs but bot continues moving through patterns
 
 ----------------------
 
