@@ -1,5 +1,12 @@
 /* 
 
+IN C BOT - octave transposition feature
+04292024 - Oliver Xu
+
+while in autopilot mode, each pattern will randomly play in written octave or one octave down
+
+----------------------
+
 IN C BOT - mute feature
 04122024 - Oliver Xu
 
@@ -79,6 +86,7 @@ boolean holdOffset = 0; // flag to determine if offset should be used
 boolean hasPlayed = 1; // flag to determine if a section has played at least once
 volatile boolean autopilotActive = 0; // flag to determine if autopilot is active
 volatile boolean muteActive = 0; // flag to determine if mute is active (tones and LEDs off)
+volatile boolean octaveDown = 0; // flag to determine if octave transposition (down 1 octave) is active
 
 const int tuningStandard = 440;
 // in equal temperament, frequency of MIDI note number m is calculated with:
@@ -126,6 +134,8 @@ double avgDurationPerPattern = perfDuration * 60 * 1000 / 53; // ms
 unsigned long lastAutopilotInterruptTime = 0;
 unsigned long lastMuteInterruptTime = 0;
 
+long randNumber;
+
 int numThirtySecondNotesInPattern[53] = { 
   24, 16, 16, 16, 16, 64, 
   72, 112, 32, 12, 
@@ -147,6 +157,10 @@ int calculateNumReps(int pattern) {
 }
 
 void playNote(unsigned int frequency, int rhythmicMultiplier, int led) {
+  // check volatile octave down flag to decide whether to transpose pitch down one octave
+  if (octaveDown) {
+    frequency = round(frequency / 2.0);
+  }
   // check volatile mute flag to decide whether to play tone and turn on LEDs
   if (!muteActive) {
     tone(8, frequency);
@@ -253,6 +267,8 @@ void setup() {
   pinMode(11, OUTPUT);
   pinMode(12, OUTPUT);
   Serial.begin(9600); // initialize serial
+
+  randomSeed(analogRead(0));
 }
 
 void incrementPattern() {
@@ -288,6 +304,8 @@ void loop(){
   // Serial.print("OFFSET= ");    Serial.println(jumpOffset);
 
   if (autopilotActive) {
+    randNumber = random(2);
+    octaveDown = randNumber < 1 ? 1 : 0;
     int numReps = calculateNumReps(pattern);
     for (int i = 0; i < numReps; i++) {
       playPattern(pattern);
