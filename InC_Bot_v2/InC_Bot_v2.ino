@@ -304,8 +304,9 @@ void loop(){
   // Serial.print("OFFSET= ");    Serial.println(jumpOffset);
 
   if (autopilotActive) {
-    randNumber = random(2);
-    octaveDown = randNumber < 1 ? 1 : 0;
+    // 70% chance of playing in written octave, 30% chance of playing one octave down
+    randNumber = random(10);
+    octaveDown = randNumber < 3 ? 1 : 0;
     int numReps = calculateNumReps(pattern);
     for (int i = 0; i < numReps; i++) {
       playPattern(pattern);
