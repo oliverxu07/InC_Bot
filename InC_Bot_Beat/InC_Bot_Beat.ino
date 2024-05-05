@@ -128,7 +128,11 @@ void OFF(){
 }
 
 void beat(){
-  playNote(C5_note * 2, THIRTY_SECOND, 7);
+  playNote(C5_note, THIRTY_SECOND, 1);
+  playRest(DOTTED_SIXTEENTH);
+  playNote(C5_note, THIRTY_SECOND, 2);
+  playRest(DOTTED_SIXTEENTH);
+  playNote(C5_note, THIRTY_SECOND, 3);
   playRest(DOTTED_SIXTEENTH);
 }
 
@@ -196,7 +200,7 @@ void setup() {
 void loop(){
   currentMillis = millis();
   if (autopilotActive) {
-    if (currentMillis - startMillis >= thirtySecondNoteDuration*EIGHTH) {
+    if (currentMillis - startMillis >= thirtySecondNoteDuration*EIGHTH*3) {
       beat();
       startMillis = currentMillis;
     }
