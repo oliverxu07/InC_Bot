@@ -232,6 +232,18 @@ void lightOn(int led) {
       digitalWrite(LED_2, HIGH); 
       digitalWrite(LED_3, HIGH); 
       break;
+    case 8:
+      digitalWrite(LED_1, LOW); 
+      digitalWrite(LED_2, HIGH); 
+      digitalWrite(LED_3, LOW); 
+      digitalWrite(LED_4, HIGH);
+      break;
+    case 9:
+      digitalWrite(LED_1, LOW); 
+      digitalWrite(LED_2, LOW); 
+      digitalWrite(LED_3, HIGH); 
+      digitalWrite(LED_4, LOW);
+      break;
   }
 }
 
@@ -983,8 +995,8 @@ void fiftyOne() {
 }
 
 void fiftyTwo() {
-  playNote(G4_note, SIXTEENTH, 2);
-  playNote(Bb4_note, SIXTEENTH, 3);
+  playNote(G4_note, SIXTEENTH, 8);
+  playNote(Bb4_note, SIXTEENTH, 9);
 }
 
 void fiftyThree() {
